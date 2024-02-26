@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import '../Events.css';
+
 
 export default function Events() {
   const [events, setEvents] = useState([]);
@@ -19,8 +21,11 @@ export default function Events() {
   }
 
   return (
-    <div>
-      Events
+    <div className= "events-container">
+      <h1> Events</h1>
+      <div>
+        <img className= "banner-image" src="https://img.freepik.com/free-photo/happy-young-company-smiling-friends-sitting-park-grass-man-women-having-fun-together_285396-8809.jpg" alt="" />
+      </div>
       <ul>
         {events.map((event) => (
           <li key={event.id}>

@@ -7,6 +7,16 @@ export default function create() {
     event_time: "",
     created_by: "",
   });
+ 
+  const options = [
+    'Cinema',
+    'Bowling',
+    'Escape Room',
+    'Evening Meal',
+    'Bar/ Pub',
+
+    ];
+   
 
   function hangleInputChange(e) {
     setEvent((event) => ({ ...event, [e.target.name]: e.target.value }));
@@ -67,6 +77,12 @@ export default function create() {
           value={event.created_by}
           onChange={hangleInputChange}
         />
+      <h4> Activity options</h4>
+      <ul>
+        {
+        options.map(option => <li>{option}</li>)
+        }
+      </ul>
 
         <button type="submit">Create Event</button>
       </form>
