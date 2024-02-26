@@ -9,7 +9,7 @@ const db = require("../model/helper");
 
 // GET Event List
 router.get("/events", function(req, res, next) {
-  db("SELECT * FROM event;")
+  db("SELECT * FROM events;")
     .then((results) => {
       res.send(results.data);
     })
@@ -26,11 +26,12 @@ router.get("/votes", async (req, res) => {
 });
 
 // POST new event
-router.post("/", async function(req, res, next) {
+router.post("/events", async function(req, res, next) {
   try {
     const { event_title, event_date, event_time, created_by } = req.body;
     await db(
-      `INSERT INTO events (event_title, event_date, event_time, created_by) VALUES ("${event_title}", "${event_date}", "${event_time}", "${created_by}");`
+      `INSERT INTO events (event_title, event_date, event_time, created_by) VALUES 
+      ("${event_title}", "${event_date}", "${event_time}", "${created_by}");`
     );
 
     res.status(201).send({ message: "Event was created" });
