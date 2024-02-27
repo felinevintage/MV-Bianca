@@ -1,5 +1,13 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
+export const options = [
+  '🍿 Cinema',
+  '🎳 Bowling',
+  '🔓 Escape Room',
+  '🍽️ Evening Meal',
+  '🍻 Bar/ Pub',
 
+  ];
 export default function create() {
   const [event, setEvent] = useState({
     event_title: "",
@@ -8,14 +16,7 @@ export default function create() {
     created_by: "",
   });
  
-  const options = [
-    'Cinema',
-    'Bowling',
-    'Escape Room',
-    'Evening Meal',
-    'Bar/ Pub',
-
-    ];
+  const pencil_emoji = '\u{1FA84}'
    
 
   function hangleInputChange(e) {
@@ -40,7 +41,15 @@ export default function create() {
   }
 
   return (
-    <div>
+    <div> 
+      <nav>
+      <ul className="nav-links">
+      <li>
+        <Link to="/">Events Home</Link>
+          </li>
+          </ul>
+          </nav>
+      <h2>{pencil_emoji} Create your event {pencil_emoji} </h2>
       <form onSubmit={handleSubmit}>
         <label htmlFor="event_title">Event Title:</label>
         <input
@@ -50,7 +59,7 @@ export default function create() {
           value={event.event_title}
           onChange={hangleInputChange}
         />
-
+<br></br>
         <label htmlFor="event_date">Event Date:</label>
         <input
           type="date"
@@ -59,7 +68,7 @@ export default function create() {
           value={event.event_date}
           onChange={hangleInputChange}
         />
-
+       
         <label htmlFor="event_time">Event Time:</label>
         <input
           type="time"
@@ -68,7 +77,7 @@ export default function create() {
           value={event.event_time}
           onChange={hangleInputChange}
         />
-
+        <br></br>
         <label htmlFor="created_by">Created By:</label>
         <input
           type="text"
@@ -77,13 +86,14 @@ export default function create() {
           value={event.created_by}
           onChange={hangleInputChange}
         />
-      <h4> Activity options</h4>
+       
+      <fieldset><legend>Activity options</legend>
       <ul>
         {
-        options.map(option => <li>{option}</li>)
+        options.map(option => <li className="no-bullets">{option}</li>)
         }
       </ul>
-
+      </fieldset> <br></br>
         <button type="submit">Create Event</button>
       </form>
     </div>

@@ -22,14 +22,22 @@ export default function Events() {
 
   return (
     <div className= "events-container">
+      <nav>
+      <ul className="nav-links">
+      <li>
+        <Link to="/">Events Home</Link>
+          </li>
+         <li> <Link to = "/Create">Create an event</Link></li> </ul>
+          </nav>
       <h1> Events</h1>
       <div>
         <img className= "banner-image" src="https://img.freepik.com/free-photo/happy-young-company-smiling-friends-sitting-park-grass-man-women-having-fun-together_285396-8809.jpg" alt="" />
       </div>
       <ul>
         {events.map((event) => (
-          <li key={event.id}>
-            <Link to={`/vote/${event.id}`}>{event.event_title}</Link>
+          <li key={event.id} className="no-bullets">
+             📅 <Link to={`/vote/${event.id}`}>{event.event_title}</Link>
+            {console.log(event)}
           </li>
         ))}
       </ul>
