@@ -1,24 +1,18 @@
+import React from "react";
 import { useState } from "react";
-import { Link } from "react-router-dom";
-export const options = [
-  '🍿 Cinema',
-  '🎳 Bowling',
-  '🔓 Escape Room',
-  '🍽️ Evening Meal',
-  '🍻 Bar/ Pub',
 
-  ];
-export default function create() {
-  const [event, setEvent] = useState({
+
+const initial = {
     event_title: "",
     event_date: "",
     event_time: "",
     created_by: "",
-  });
- 
-  const pencil_emoji = '\u{1FA84}'
-   
+}
 
+export default function Create() {
+  const [event, setEvent] = useState({ ...initial });
+ 
+  
   function hangleInputChange(e) {
     setEvent((event) => ({ ...event, [e.target.name]: e.target.value }));
   }
@@ -26,15 +20,18 @@ export default function create() {
   async function handleSubmit(e) {
     e.preventDefault();
     try {
-      const response = await fetch("/api/events", {
+      const response = await fetch("/api/index", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(event),
       });
-      const data = await response.json();
-      console.log(data);
+      if (response.ok) {
+        setEvent({ ...initial })
+      } else {
+        console.log("Failed to submit")
+      }
     } catch (err) {
       console.log(err);
     }
@@ -42,14 +39,7 @@ export default function create() {
 
   return (
     <div> 
-      <nav>
-      <ul className="nav-links">
-      <li>
-        <Link to="/">Events Home</Link>
-          </li>
-          </ul>
-          </nav>
-      <h2>{pencil_emoji} Create your event {pencil_emoji} </h2>
+      <h2> Create your event  </h2>
       <form onSubmit={handleSubmit}>
         <label htmlFor="event_title">Event Title:</label>
         <input
@@ -87,13 +77,7 @@ export default function create() {
           onChange={hangleInputChange}
         />
        
-      <fieldset><legend>Activity options</legend>
-      <ul>
-        {
-        options.map(option => <li className="no-bullets">{option}</li>)
-        }
-      </ul>
-      </fieldset> <br></br>
+     
         <button type="submit">Create Event</button>
       </form>
     </div>

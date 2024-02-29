@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import React from "react";
 import { useParams } from 'react-router-dom';
 import { Link } from "react-router-dom";
-import {options} from "./Create";
+
 
 
 export default function Vote() {
@@ -18,18 +18,18 @@ const [vote, setVote] = useState({ chosen_by:"", activity_type:"", notes:"" });
 
   async function getEvent() {
     try {
-      const response = await fetch(`/api/events/${id}`);
+      const response = await fetch(`/api/index/events/${id}`);
       const data = await response.json();
       setEvent(data);
     } catch (err) {
-      console.log(data);
+      console.log(err);
     }
   }
 
   async function handleSubmit(e) {
     e.preventDefault();
     try {
-      const response = await fetch(`/events/${id}/votes`, {
+      const response = await fetch(`api/index/events/${id}/votes`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -49,13 +49,6 @@ function handleChange(e) {
   // Now you can use id in your component logic
   return (
     <div>
-<nav>
-      <ul className="nav-links">
-      <li>
-        <Link to="/">Events Home</Link>
-          </li>
-         <li> <Link to = "/Create">Create an event</Link></li> </ul>
-          </nav>
       <h2 className="event_title">{emoji} {event.event_title} {emoji}</h2>
       <h4> Date: {event.event_date} Time: {event.event_time} </h4>
       <h6>{event.created_by}</h6>
@@ -63,14 +56,12 @@ function handleChange(e) {
       <label htmlFor= "voterName">Enter your name: </label> <br></br>
       <input onChange ={handleChange} type= "text" name="chosen_by" value = {vote.chosen_by}/>
     
-      <fieldset><legend>Activity options</legend><ul>
-        {
-        options.map(option => [<input onChange ={handleChange} type="radio" name="activity_type" value={vote.activity_type}/>, <label>{option}</label>, <br></br>])
-        }
+      <ul>
+        
+      <input onChange ={handleChange} type="radio" name="activity_type" value={vote.activity_type}/> <label></label>, <br></br>
+        
       </ul> 
       <label htmlFor= "voteNote">Note:</label> <input onChange ={handleChange} type="text" name ="notes" value={vote.notes}/> 
-      </fieldset>
-      <br></br>
       <button type= "submit">Submit vote</button>
       </form> 
     </div>
