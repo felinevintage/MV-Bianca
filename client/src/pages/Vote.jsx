@@ -9,7 +9,7 @@ export default function Vote() {
   // useParams returns an object with keys for each URL parameter
 const { id } = useParams();
 const [event, setEvent] = useState({});
-const emoji = '\u{1F38A}'
+// const emoji = '\u{1F38A}'
 const [vote, setVote] = useState({ chosen_by:"", activity_type:"", notes:"" }); 
 
   useEffect(() => {
@@ -46,16 +46,25 @@ const [vote, setVote] = useState({ chosen_by:"", activity_type:"", notes:"" });
 function handleChange(e) {
   setVote((vote) => ({ ...vote, [e.target.name]: e.target.value }));
 }
-  // Now you can use id in your component logic
+
   return (
-    <div>
-      <h2 className="event_title">{emoji} {event.event_title} {emoji}</h2>
-      <h4> Date: {event.event_date} Time: {event.event_time} </h4>
+    <>
+    <div className="container d-flex pt-5 justify-content-center">
+      <div>
+      <p className="pt-6 mb-4"> {event.event_title}</p>
+      </div>
+      <div>
+      <h4> Date: {event.event_date} </h4>
+      <h4>Time: {event.event_time} </h4>
+      <div className="pt-6 mb-4">
       <h6>{event.created_by}</h6>
+      
+      </div>
+      <div className="pt-5 justify-content-center">
       <form onSubmit ={handleSubmit}>
       <label htmlFor= "voterName">Enter your name: </label> <br></br>
       <input onChange ={handleChange} type= "text" name="chosen_by" value = {vote.chosen_by}/>
-    
+      
       <ul>
         
       <input onChange ={handleChange} type="radio" name="activity_type" value={vote.activity_type}/> <label></label>, <br></br>
@@ -64,8 +73,10 @@ function handleChange(e) {
       <label htmlFor= "voteNote">Note:</label> <input onChange ={handleChange} type="text" name ="notes" value={vote.notes}/> 
       <button type= "submit">Submit vote</button>
       </form> 
+      </div>
+      </div>
     </div>
-    
+    </>
   );
 }
 

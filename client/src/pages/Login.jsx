@@ -8,7 +8,7 @@ function Login() {
     password: "test",
   });
 
-  const [data, setData] = useState(null);
+  // const [data, setData] = useState(null);
 
   const { username, password } = credentials;
 
@@ -19,18 +19,13 @@ function Login() {
 
   const login = async () => {
     try {
-      const { data } = await axios("/api/auth/login", {
-        method: "POST",
-        data: credentials,
-      });
-
+      const { data } = await axios.post("/api/auth/login", credentials);
       //store it locally
       localStorage.setItem("token", data.token);
-      console.log(data.message, data.token);
-      setData(data.message);
+      localStorage.setItem("userId", data.userId);
+      console.log(data.message, data.token, data.userId);
     } catch (error) {
-      console.log(error);
-      setData(error.message);
+      console.log(error);  
     }
   };
 
@@ -38,20 +33,6 @@ function Login() {
     localStorage.removeItem("token");
   };
 
-  const requestData = async () => {
-    try {
-      const { data } = await axios("/api/auth/events", {
-        headers: {
-          authorization: "Bearer " + localStorage.getItem("token"),
-        },
-      });
-      setData(data.message);
-      console.log(data.message);
-    } catch (error) {
-      console.log(error);
-      setData(error.message);
-    }
-  };
 
   return (
     <div className="container d-flex pt-5 justify-content-center">
@@ -71,7 +52,7 @@ function Login() {
           className="form-control mb-2"
         />
         <div className="d-flex gap-2 justify-content-center">
-          <button className="btn btn-primary" onClick={login}>
+          <button className="btn btn-success" onClick={login}>
             Log in
           </button>
           <button className="btn btn-outline-dark ml-2" onClick={logout}>

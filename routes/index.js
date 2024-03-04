@@ -1,6 +1,7 @@
 var express = require("express");
 var router = express.Router();
 const db = require("../model/helper");
+const eventMustExist = require("../guards/eventMustExist");
 
 // GET Event List
 router.get("/events", function (req, res, next) {
@@ -12,7 +13,7 @@ router.get("/events", function (req, res, next) {
 });
 
 // GET one event by ID
-router.get("/events/:id", async (req, res) => {
+router.get("/events/:id", eventMustExist, async (req, res) => {
   const { id } = req.params;
   db(`SELECT * FROM events WHERE id = ${id};`)
     .then((results) => {
@@ -24,10 +25,10 @@ router.get("/events/:id", async (req, res) => {
 // POST new event
 router.post("/events", async function (req, res, next) {
   try {
-    const { event_title, event_date, event_time, created_by } = req.body;
+    const { event_title, event_date, event_time, created_by, user_id } = req.body;
     await db(
-      `INSERT INTO events (event_title, event_date, event_time, created_by) VALUES 
-      ("${event_title}", "${event_date}", "${event_time}", "${created_by}");`
+      `INSERT INTO events (event_title, event_date, event_time, created_by, user_id) VALUES 
+      ("${event_title}", "${event_date}", "${event_time}", "${created_by}", "${user_id}");`
     );
 
     res.status(201).send({ message: "Event was created" });

@@ -33,6 +33,7 @@ router.post("/login", async (req, res) => {
       `SELECT * FROM users WHERE username = "${username}"`
     );
     const user = results.data[0];
+    console.log("User:", user);
     if (user) {
       const user_id = user.id;
 

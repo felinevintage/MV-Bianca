@@ -21,15 +21,14 @@ export default function Events() {
   }
 
   return (
-    <div className= "container justify-contents-center">
-      <h1> Events</h1>
+    <div className="container d-flex pt-5 justify-content-center">
       <div>
-        <img className= "banner-image justify-contents-center" src="https://img.freepik.com/free-photo/happy-young-company-smiling-friends-sitting-park-grass-man-women-having-fun-together_285396-8809.jpg" alt="" />
+        <img className= "banner-image d-flex justify-contents-center" src="https://img.freepik.com/free-photo/happy-young-company-smiling-friends-sitting-park-grass-man-women-having-fun-together_285396-8809.jpg" alt="" />
       </div>
       <ul>
         {events.map((event) => (
           <li key={event.id} className="no-bullets">
-             📅 <Link to={`/vote/${event.id}`}>{event.event_title}</Link>
+              <Link to={`/vote/${event.id}`}>{event.event_title}</Link>
             {console.log(event)}
           </li>
         ))}

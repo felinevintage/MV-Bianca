@@ -12,7 +12,7 @@ const initial = {
 
 function Register() {
 
-    const[newUser, setNewUser] = useState({ ...initial });
+    const[user, setUser] = useState({ ...initial });
     
     
     async function handleSubmit(event) {
@@ -23,10 +23,10 @@ function Register() {
             headers: {
               "Content-type": "application/json",
             },
-            body: JSON.stringify(newUser),
+            body: JSON.stringify(user),
           });
           if (response.ok) {
-            setNewUser({ ...initial });
+            setUser({ ...initial });
           } else {
             console.log("Failed to submit");
           }
@@ -36,7 +36,7 @@ function Register() {
       }
 
       const handleChange = (e) => {
-        setNewUser((input) => ({
+        setUser((input) => ({
           ...input,
           [e.target.name]: e.target.value,
         }));
@@ -51,9 +51,9 @@ return (
                 <label>Pick a username</label>
                     <input
                     onChange={handleChange}
-                    value={newUser.username}
+                    value={user.username}
                     name="username"
-                    type="text"
+                    type="username"
                     className="form-control mb-2"
                     />
         </div>
@@ -61,7 +61,7 @@ return (
             <label>Choose a password</label>
                 <input
                 onChange={handleChange}
-                value={newUser.password}
+                value={user.password}
                 name="password"
                 type="password"
                 className="form-control mb-2"
@@ -71,7 +71,7 @@ return (
             <label>First Name</label>
                 <input
                 onChange={handleChange}
-                value={newUser.firstname}
+                value={user.firstname}
                 name="firstname"
                 type="text"
                 className="form-control mb-2"
@@ -81,7 +81,7 @@ return (
             <label>Surname</label>
                 <input
                 onChange={handleChange}
-                value={newUser.lastname}
+                value={user.lastname}
                 name="lastname"
                 type="text"
                 className="form-control mb-2"
