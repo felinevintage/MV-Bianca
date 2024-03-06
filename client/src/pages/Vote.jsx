@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import React from "react";
-import { useParams } from 'react-router-dom';
-import { Link } from "react-router-dom";
+import { useParams, Link } from 'react-router-dom';
+
+
 
 
 
@@ -9,81 +10,51 @@ export default function Vote() {
   // useParams returns an object with keys for each URL parameter
 const { id } = useParams();
 const [event, setEvent] = useState({});
-// const emoji = '\u{1F38A}'
-const [vote, setVote] = useState({ chosen_by:"", activity_type:"", notes:"" }); 
+ 
 
   useEffect(() => {
     getEvent();
   }, [id]);
 
+  
+
   async function getEvent() {
     try {
-      const response = await fetch(`/api/index/events/${id}`);
-      const data = await response.json();
-      setEvent(data);
-    } catch (err) {
-      console.log(err);
-    }
-  }
-
-  async function handleSubmit(e) {
-    e.preventDefault();
-    try {
-      const response = await fetch(`api/index/events/${id}/votes`, {
-        method: "POST",
+      const response = await fetch(`/api/index/events/${id}`, {
+        method: "GET",
         headers: {
           "Content-Type": "application/json",
+          "authorization": `Bearer ${localStorage.getItem('token')}`,
         },
-        body: JSON.stringify(vote),
       });
-      const data = await response.json();
-      console.log(data);
+  
+      if (response.ok) {
+        const eventsData = await response.json();
+        setEvent(eventsData);
+      } else {
+        console.log("Failed to get events");
+      }
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   }
 
-function handleChange(e) {
-  setVote((vote) => ({ ...vote, [e.target.name]: e.target.value }));
-}
+
 
   return (
-    <>
-    <div className="container d-flex pt-5 justify-content-center">
-      <div>
-      <p className="pt-6 mb-4"> {event.event_title}</p>
-      </div>
-      <div>
-      <h4> Date: {event.event_date} </h4>
-      <h4>Time: {event.event_time} </h4>
-      <div className="pt-6 mb-4">
-      <h6>{event.created_by}</h6>
-      
-      </div>
-      <div className="pt-5 justify-content-center">
-      <form onSubmit ={handleSubmit}>
-      <label htmlFor= "voterName">Enter your name: </label> <br></br>
-      <input onChange ={handleChange} type= "text" name="chosen_by" value = {vote.chosen_by}/>
-      
-      <ul>
-        
-      <input onChange ={handleChange} type="radio" name="activity_type" value={vote.activity_type}/> <label></label>, <br></br>
-        
-      </ul> 
-      <label htmlFor= "voteNote">Note:</label> <input onChange ={handleChange} type="text" name ="notes" value={vote.notes}/> 
-      <button type= "submit">Submit vote</button>
-      </form> 
-      </div>
-      </div>
-    </div>
-    </>
+  <div className="container pt-5 text-center">
+    
+  <h1 className="fw-semibold">Details of your event</h1>      
+  <p className="fs-3">Event: {event.event_title}</p>      
+  <p className="fs-3">Date: {event.event_date}</p>
+  <p className="fs-3">Time: {event.event_time}</p>  
+  <Link to="/events" className="btn btn-success mt-3">
+        Back to Events List
+      </Link>  
+
+  </div>
   );
 }
 
 
-// grab the id from the params of the URL using useParams()
-// we have to call a function getEvent from a useEffect (look at Events.jsx for an example  )
-// display the evnet on the page
-// show a form that asks for user anme and option
-// when the form is submitted, we have to call a function createVote
-// that's going to make a fetch request to the server to create a vote (POST /api/events/:id/votes)
+

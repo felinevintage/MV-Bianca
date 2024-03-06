@@ -2,9 +2,10 @@ var express = require("express");
 var router = express.Router();
 const db = require("../model/helper");
 const eventMustExist = require("../guards/eventMustExist");
+var userShouldBeLoggedIn = require("../guards/userShouldBeLoggedIn");
 
 // GET Event List
-router.get("/events", function (req, res, next) {
+router.get("/events", userShouldBeLoggedIn, async function (req, res, next) {
   db("SELECT * FROM events;")
     .then((results) => {
       res.send(results.data);
@@ -12,8 +13,17 @@ router.get("/events", function (req, res, next) {
     .catch((err) => res.status(500).send(err));
 });
 
+//GET all users
+router.get("/users/username", async function (req, res, next) {
+  db("SELECT username FROM users;")
+    .then((results) => {
+      res.send(results.data);
+    })
+    .catch((err) => res.status(500).send(err));
+});
+
 // GET one event by ID
-router.get("/events/:id", eventMustExist, async (req, res) => {
+router.get("/events/:id", userShouldBeLoggedIn, async (req, res) => {
   const { id } = req.params;
   db(`SELECT * FROM events WHERE id = ${id};`)
     .then((results) => {
@@ -22,10 +32,22 @@ router.get("/events/:id", eventMustExist, async (req, res) => {
     .catch((err) => res.status(500).send("Error votes could not be retrieved"));
 });
 
+
+// //GET eventss
+// router.get("/votes/:id", userShouldBeLoggedIn, async (req, res) => {
+//   const { id } = req.params;
+//   db(`SELECT * FROM votes WHERE id = ${id};`)
+//     .then((results) => {
+//       res.send(results.data[0]);
+//     })
+//     .catch((err) => res.status(500).send("Error votes could not be retrieved"));
+// });
+
 // POST new event
-router.post("/events", async function (req, res, next) {
+router.post("/events", userShouldBeLoggedIn, async function (req, res, next) {
   try {
-    const { event_title, event_date, event_time, created_by, user_id } = req.body;
+    const { event_title, event_date, event_time, created_by } = req.body;
+    const {user_id} = req;
     await db(
       `INSERT INTO events (event_title, event_date, event_time, created_by, user_id) VALUES 
       ("${event_title}", "${event_date}", "${event_time}", "${created_by}", "${user_id}");`
@@ -37,20 +59,47 @@ router.post("/events", async function (req, res, next) {
   }
 });
 
-// POST new vote for an event by ID
-router.post("/events/:id/votes", async (req, res) => {
+//POST into votes
+router.post("/votes", async function (req, res, next) {
   try {
-    const { id } = req.params;
-    const { chosen_by, activity_type, notes } = req.body;
+    const { organised_by, activity_type, username, notes } = req.body;
+    const id = await db("SELECT id FROM events ORDER BY id DESC LIMIT 1;")
+    console.log(id.data[0].id);
+    console.log(id.data)
     await db(
-      `INSERT INTO votes (event_id, chosen_by, activity_type, notes) VALUES ("${id}", "${chosen_by}", "${activity_type}", "${notes}");`
+      `INSERT INTO votes ( event_id, organised_by, activity_type, username, notes ) VALUES 
+      ("${id.data[0].id}", "${organised_by}", "${activity_type}", "${username}", "${notes}");`
     );
-    res.status(201).send("Vote was created");
+
+    res.status(201).send({ message: "Event was created" });
   } catch (err) {
-    console.error(err);
-    res.status(500).send("Error vote was not created");
+    res.status(500).send(err);
   }
 });
+
+
+// POST new vote for an event by ID
+// router.post("/votes/:id", userShouldBeLoggedIn, async (req, res) => {
+//   try {
+//     const { id } = req.params;
+//     const { organised_by, chosen_by, activity_type, notes } = req.body;
+
+//     await db(
+//       `INSERT INTO votes (organised_by, chosen_by, activity_type, notes) VALUES (${chosen_by}, ${activity_type}, ${notes});`,
+      
+//     );
+//     await db(
+//       `UPDATE events SET vote_count = vote_count + 1 WHERE id = ${id};`,
+      
+//     );
+
+//     res.status(201).send("Vote was created");
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).send("Error vote was not created");
+//   }
+// });
+
 
 // CHAT GPT Steps:
 // Function to add a new vote to the database
